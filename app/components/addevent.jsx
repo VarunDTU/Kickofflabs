@@ -9,8 +9,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useContext, useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { AddNewEvent } from "../events/action";
-
 export function AddEvent({ currentDate }) {
   const [events, setevents] = useContext(EventContext);
   const [newEvent, setNewEvent] = useState({
@@ -79,13 +80,18 @@ export function AddEvent({ currentDate }) {
       });
       setLoading(false);
     } catch (e) {
-      console.log(e);
+      const error = JSON.parse(e.message);
+
+      toast.error(`Error: ${error[0]?.path[0]} ${error[0]?.message}`);
       setLoading(false);
     }
   };
 
   return (
     <Popover>
+      <div className="text-base">
+        <ToastContainer></ToastContainer>
+      </div>
       <PopoverTrigger asChild>
         <Button variant="outline">Add a New Event</Button>
       </PopoverTrigger>
@@ -220,7 +226,7 @@ export function AddEvent({ currentDate }) {
               disabled={loading}
               className="btn btn-primary hover:bg-slate-400 border p-2 rounded-lg focus:outline-2 focus:border-3 focus:border-black "
             >
-              Add Event
+              {loading ? "Adding..." : "Add Event"}
             </button>
           </div>
         </div>

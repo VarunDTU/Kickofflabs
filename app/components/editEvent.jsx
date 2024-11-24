@@ -215,7 +215,7 @@ export function EditEvent({ currentEvent }) {
               disabled={loading}
               className="btn btn-primary hover:bg-slate-400 border p-2 rounded-lg focus:outline-2 focus:border-3 focus:border-black "
             >
-              Update Event
+              {loading ? "Updating" : "Update Event"}
             </button>
           </div>
         </div>
