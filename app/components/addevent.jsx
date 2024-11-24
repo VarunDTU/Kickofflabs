@@ -87,7 +87,7 @@ export function AddEvent({ currentDate }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline">Add New Event</Button>
+        <Button variant="outline">Add a New Event</Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">
         <div className="grid gap-4">
