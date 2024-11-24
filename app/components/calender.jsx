@@ -67,7 +67,7 @@ export default function Calender() {
           onSelect={setSelected}
         />
       </div>
-      <div className="w-full md:w-1/2 h-96  border p-4 rounded-lg m-4 ">
+      <div className="w-full md:w-1/2 h-96  border p-4 rounded-lg md-0 md:m-4 ">
         <div className="text-2xl font-bold flex justify-between ">
           <div>
             <div>Events</div>

@@ -56,13 +56,12 @@ export async function DeleteEvent(EventId) {
 }
 
 export async function UpdateEvent(EventData) {
-  console.log(EventData);
   EventData = {
     ...EventData,
     start_time: new Date(EventData.start_time),
     end_time: new Date(EventData.end_time),
   };
-  console.log(EventData);
+
   User.parse(EventData);
   const sql = neon(process.env.DATABASE_URL);
   const { userId } = await auth();

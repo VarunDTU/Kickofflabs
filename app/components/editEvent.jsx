@@ -29,6 +29,7 @@ export function EditEvent({ currentEvent }) {
     date: currentEvent?.starttime?.toDateString(),
   });
   const [loading, setLoading] = useState(false);
+  const [suceess, setSuccess] = useState(false);
   useEffect(() => {
     setNewEvent({
       id: currentEvent?.event_id,
@@ -49,6 +50,7 @@ export function EditEvent({ currentEvent }) {
   const hours = Array.from({ length: 24 }, (_, i) => i + 1);
   const minutes = Array.from({ length: 3 }, (_, i) => i);
   const editEvent = async () => {
+    console.log(newEvent);
     setLoading(true);
     try {
       const formatedNewEvent = {
@@ -68,6 +70,7 @@ export function EditEvent({ currentEvent }) {
 
       const response = await UpdateEvent(formatedNewEvent);
       setevents(response);
+      setSuccess(false);
     } catch (e) {
       console.log(e);
       setLoading(false);
@@ -77,7 +80,7 @@ export function EditEvent({ currentEvent }) {
   };
 
   return (
-    <Popover>
+    <Popover open={suceess} onOpenChange={setSuccess}>
       <PopoverTrigger asChild>
         <Button variant="outline">Edit</Button>
       </PopoverTrigger>
