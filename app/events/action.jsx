@@ -7,10 +7,12 @@ const User = z.object({
   description: z.string(),
   start_time: z.date(),
   end_time: z.date(),
+  id: z.number().optional(),
 });
 async function getData(userId) {
   const sql = neon(process.env.DATABASE_URL);
-  const response = await sql`SELECT * FROM events WHERE user_id = ${userId}`;
+  const response =
+    await sql`SELECT * FROM events WHERE user_id = ${userId} ORDER BY startTime ASC`;
 
   return response;
 }
@@ -47,6 +49,25 @@ export async function AddNewEvent(userData) {
 export async function DeleteEvent(EventId) {
   const sql = neon(process.env.DATABASE_URL);
   await sql`DELETE FROM events WHERE event_id = ${EventId}`;
+
+  const response = await GetEvents();
+
+  return response;
+}
+
+export async function UpdateEvent(EventData) {
+  console.log(EventData);
+  EventData = {
+    ...EventData,
+    start_time: new Date(EventData.start_time),
+    end_time: new Date(EventData.end_time),
+  };
+  console.log(EventData);
+  User.parse(EventData);
+  const sql = neon(process.env.DATABASE_URL);
+  const { userId } = await auth();
+  EventData = { ...EventData, userId: userId };
+  await sql`UPDATE events SET title = ${EventData.title}, description = ${EventData.description}, startTime = ${EventData.start_time}, endTime = ${EventData.end_time} WHERE event_id = ${EventData.event_id} AND user_id = ${EventData.userId}`;
 
   const response = await GetEvents();
 

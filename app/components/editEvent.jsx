@@ -9,47 +9,50 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useContext, useEffect, useState } from "react";
-import { AddNewEvent } from "../events/action";
+import { UpdateEvent } from "../events/action";
 
-export function AddEvent({ currentDate }) {
+export function EditEvent({ currentEvent }) {
   const [events, setevents] = useContext(EventContext);
+
   const [newEvent, setNewEvent] = useState({
-    title: "",
-    description: "",
+    id: currentEvent?.event_id,
+    title: currentEvent?.title,
+    description: currentEvent?.description,
     startTime: {
-      hour: 0,
-      minute: 0,
+      hour: currentEvent?.starttime?.getHours(),
+      minute: currentEvent?.starttime?.getMinutes(),
     },
     endTime: {
-      hour: 0,
-      minute: 0,
+      hour: currentEvent?.endtime?.getHours(),
+      minute: currentEvent?.endtime?.getMinutes(),
     },
-    date: currentDate?.toDateString(),
+    date: currentEvent?.starttime?.toDateString(),
   });
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setNewEvent({
-      title: "",
-      description: "",
+      id: currentEvent?.event_id,
+      title: currentEvent?.title,
+      description: currentEvent?.description,
       startTime: {
-        hour: 0,
-        minute: 0,
+        hour: currentEvent?.starttime?.getHours(),
+        minute: currentEvent?.starttime?.getMinutes(),
       },
       endTime: {
-        hour: 0,
-        minute: 0,
+        hour: currentEvent?.endtime?.getHours(),
+        minute: currentEvent?.endtime?.getMinutes(),
       },
-      date: currentDate?.toDateString(),
+      date: currentEvent?.starttime?.toDateString(),
     });
-  }, [currentDate]);
-  if (!currentDate)
-    return <div className="text-sm">Select day to add event</div>;
+  }, [currentEvent]);
+
   const hours = Array.from({ length: 24 }, (_, i) => i + 1);
   const minutes = Array.from({ length: 3 }, (_, i) => i);
-  const addNewEvent = async () => {
+  const editEvent = async () => {
     setLoading(true);
     try {
       const formatedNewEvent = {
+        id: currentEvent?.event_id,
         title: newEvent.title,
         description: newEvent.description,
         start_time: new Date(newEvent.date).setHours(
@@ -60,26 +63,15 @@ export function AddEvent({ currentDate }) {
           newEvent.endTime.hour,
           newEvent.endTime.minute
         ),
+        event_id: currentEvent?.event_id,
       };
-      const response = await AddNewEvent(formatedNewEvent);
 
+      const response = await UpdateEvent(formatedNewEvent);
       setevents(response);
-      setNewEvent({
-        title: "",
-        description: "",
-        startTime: {
-          hour: 0,
-          minute: 0,
-        },
-        endTime: {
-          hour: 0,
-          minute: 0,
-        },
-        date: currentDate?.toDateString(),
-      });
-      setLoading(false);
     } catch (e) {
       console.log(e);
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };
@@ -87,13 +79,13 @@ export function AddEvent({ currentDate }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline">Add New Event</Button>
+        <Button variant="outline">Edit</Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">
         <div className="grid gap-4">
           <div className="space-y-2">
             <h4 className="font-medium leading-none">{newEvent.date}</h4>
-            <p className="text-sm text-muted-foreground">Add event</p>
+            <p className="text-sm text-muted-foreground">Update event</p>
           </div>
           <div className="grid gap-2">
             <div className="grid grid-cols-3 items-center gap-4">
@@ -216,11 +208,11 @@ export function AddEvent({ currentDate }) {
             </div>
 
             <button
-              onClick={addNewEvent}
+              onClick={editEvent}
               disabled={loading}
               className="btn btn-primary hover:bg-slate-400 border p-2 rounded-lg focus:outline-2 focus:border-3 focus:border-black "
             >
-              Add Event
+              Update Event
             </button>
           </div>
         </div>

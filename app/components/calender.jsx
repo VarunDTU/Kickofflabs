@@ -13,13 +13,13 @@ import "react-day-picker/src/style.css";
 import { DeleteEvent } from "../events/action";
 import { EventContext } from "../page";
 import { AddEvent } from "./addevent";
+import { EditEvent } from "./editEvent";
 export default function Calender() {
   const [events, setevents] = useContext(EventContext);
-  console.log(events);
+
   const date = new Date();
-  const [selected, setSelected] = useState(
-    new Date(`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`)
-  );
+  const [selected, setSelected] = useState();
+  // new Date(`${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`)
   if (!events) return <div>Loading...</div>;
 
   const currentEvents = events.filter((event) => {
@@ -45,7 +45,6 @@ export default function Calender() {
   events?.forEach((element) => {
     bookedEvents.push(element.starttime);
   });
-  console.log(bookedEvents);
 
   return (
     <div className=" h-full flex flex-col md:flex-row justify-between p-2 ">
@@ -119,7 +118,7 @@ export default function Calender() {
                       >
                         Delete
                       </Button>
-                      <Button className="m-1">Edit</Button>
+                      <EditEvent currentEvent={event}></EditEvent>
                       {event?.description}
                     </AccordionContent>
                   </AccordionItem>
